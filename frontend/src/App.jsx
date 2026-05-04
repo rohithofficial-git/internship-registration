@@ -79,11 +79,10 @@ function App() {
       });
       submitData.append('screenshot', screenshot);
 
-      // Assuming backend runs on localhost:5000 during dev
-      const backendUrl = "https://internship-registration.onrender.com";
+      const backendUrl = "https://internship-registration.onrender.com/api/register"
+
       const response = await fetch(`${backendUrl}/api/register`, {
         method: 'POST',
-        // Note: Do not set Content-Type header when sending FormData, fetch sets it automatically with the boundary
         body: submitData,
       });
 
@@ -91,23 +90,13 @@ function App() {
 
       if (response.ok) {
         setIsSubmitted(true);
-        setMessage('Registration successful! We will contact you soon.');
-        setFormData({
-          name: '',
-          email: '',
-          phone: '',
-          university: '',
-          major: '',
-          graduation: '',
-          transactionId: ''
-        });
-        setScreenshot(null);
-        setPreview('');
+        setMessage('Registration successful!');
       } else {
-        setError(data.error || 'Registration failed. Please try again.');
+        setError(data.message || data.error || 'Registration failed');
       }
+
     } catch (err) {
-      setError('Network error. Please make sure the backend server is running.');
+      setError(err.message || 'Network error');
     } finally {
       setLoading(false);
     }
