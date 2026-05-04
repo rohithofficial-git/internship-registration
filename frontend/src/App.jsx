@@ -79,14 +79,22 @@ function App() {
       });
       submitData.append('screenshot', screenshot);
 
-      const backendUrl = "https://internship-registration.onrender.com/api/register"
+      const backendUrl = "https://internship-registration.onrender.com";
 
       const response = await fetch(`${backendUrl}/api/register`, {
         method: 'POST',
         body: submitData,
       });
 
-      const data = await response.json();
+      const text = await response.text();
+
+      let data;
+      try {
+        data = JSON.parse(text);
+      } catch (err) {
+        console.error("Response is not JSON:", text);
+        throw new Error("Server error: not returning JSON");
+      }
 
       if (response.ok) {
         setIsSubmitted(true);
