@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import Tesseract from 'tesseract.js';
 import './index.css';
 
 function App() {
@@ -11,10 +12,14 @@ function App() {
     graduation: '',
     transactionId: ''
   });
-  
+
+  const [screenshot, setScreenshot] = useState(null);
+  const [preview, setPreview] = useState('');
+  const [isScanning, setIsScanning] = useState(false);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
   const handleChange = (e) => {
     setFormData({
@@ -23,25 +28,69 @@ function App() {
     });
   };
 
+  const handleFileChange = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    setScreenshot(file);
+    setPreview(URL.createObjectURL(file));
+    setIsScanning(true);
+    setMessage('');
+    setError('');
+    // Clear previously auto-filled transaction ID just in case
+    setFormData(prev => ({ ...prev, transactionId: '' }));
+
+    try {
+      const result = await Tesseract.recognize(file, 'eng');
+      const text = result.data.text;
+
+      // Look for a typical 12-digit transaction ID
+      const match = text.match(/\b\d{12}\b/);
+
+      if (match) {
+        setFormData(prev => ({ ...prev, transactionId: match[0] }));
+        setMessage('Transaction ID auto-filled from screenshot!');
+      } else {
+        setError('Could not automatically find a 12-digit transaction ID. Please check the screenshot or enter it manually.');
+      }
+    } catch (err) {
+      console.error('OCR Error:', err);
+      setError('Failed to scan image. Please enter transaction ID manually.');
+    } finally {
+      setIsScanning(false);
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!screenshot) {
+      setError('Please upload a payment screenshot.');
+      return;
+    }
+
     setLoading(true);
     setMessage('');
     setError('');
 
     try {
+      const submitData = new FormData();
+      Object.keys(formData).forEach(key => {
+        submitData.append(key, formData[key]);
+      });
+      submitData.append('screenshot', screenshot);
+
       // Assuming backend runs on localhost:5000 during dev
-      const response = await fetch('http://localhost:5000/api/register', {
+      const backendUrl = import.meta.env.VITE_API_URL || 'https://true-ways-smoke.loca.lt';
+      const response = await fetch(`${backendUrl}/api/register`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
+        // Note: Do not set Content-Type header when sending FormData, fetch sets it automatically with the boundary
+        body: submitData,
       });
 
       const data = await response.json();
 
       if (response.ok) {
+        setIsSubmitted(true);
         setMessage('Registration successful! We will contact you soon.');
         setFormData({
           name: '',
@@ -52,6 +101,8 @@ function App() {
           graduation: '',
           transactionId: ''
         });
+        setScreenshot(null);
+        setPreview('');
       } else {
         setError(data.error || 'Registration failed. Please try again.');
       }
@@ -62,6 +113,22 @@ function App() {
     }
   };
 
+  if (isSubmitted) {
+    return (
+      <div className="container">
+        <div className="form-wrapper success-view">
+          <div className="success-icon">✓</div>
+          <h2>Registration Successful!</h2>
+          <p>Thank you for registering. We have received your details and payment screenshot.</p>
+          <p className="success-subtext">We will review your submission and contact you soon.</p>
+          <button onClick={() => setIsSubmitted(false)} className="submit-btn new-registration-btn">
+            Register Another Candidate
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="container">
       <div className="background-shapes">
@@ -69,7 +136,7 @@ function App() {
         <div className="shape shape-2"></div>
         <div className="shape shape-3"></div>
       </div>
-      
+
       <div className="form-wrapper">
         <div className="header">
           <h1>Internship Registration</h1>
@@ -82,105 +149,127 @@ function App() {
         <form onSubmit={handleSubmit} className="registration-form">
           <div className="form-group">
             <label htmlFor="name">Full Name</label>
-            <input 
-              type="text" 
-              id="name" 
-              name="name" 
-              value={formData.name} 
-              onChange={handleChange} 
+            <input
+              type="text"
+              id="name"
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
               placeholder="John Doe"
-              required 
+              required
             />
           </div>
 
           <div className="form-group">
             <label htmlFor="email">Email Address</label>
-            <input 
-              type="email" 
-              id="email" 
-              name="email" 
-              value={formData.email} 
-              onChange={handleChange} 
+            <input
+              type="email"
+              id="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
               placeholder="john@example.com"
-              required 
+              required
             />
           </div>
 
           <div className="form-group">
             <label htmlFor="phone">Phone Number</label>
-            <input 
-              type="tel" 
-              id="phone" 
-              name="phone" 
-              value={formData.phone} 
-              onChange={handleChange} 
+            <input
+              type="tel"
+              id="phone"
+              name="phone"
+              value={formData.phone}
+              onChange={handleChange}
               placeholder="+1 (555) 000-0000"
-              required 
+              required
             />
           </div>
 
           <div className="form-group">
             <label htmlFor="university">University</label>
-            <input 
-              type="text" 
-              id="university" 
-              name="university" 
-              value={formData.university} 
-              onChange={handleChange} 
+            <input
+              type="text"
+              id="university"
+              name="university"
+              value={formData.university}
+              onChange={handleChange}
               placeholder="State University"
-              required 
+              required
             />
           </div>
 
           <div className="form-row">
             <div className="form-group half">
               <label htmlFor="major">Major</label>
-              <input 
-                type="text" 
-                id="major" 
-                name="major" 
-                value={formData.major} 
-                onChange={handleChange} 
+              <input
+                type="text"
+                id="major"
+                name="major"
+                value={formData.major}
+                onChange={handleChange}
                 placeholder="Computer Science"
-                required 
+                required
               />
             </div>
 
             <div className="form-group half">
               <label htmlFor="graduation">Expected Graduation</label>
-              <input 
-                type="month" 
-                id="graduation" 
-                name="graduation" 
-                value={formData.graduation} 
-                onChange={handleChange} 
-                required 
+              <input
+                type="month"
+                id="graduation"
+                name="graduation"
+                value={formData.graduation}
+                onChange={handleChange}
+                required
               />
             </div>
           </div>
 
           <div className="payment-section">
-            <h3>Registration Fee Payment</h3>
-            <p>Please scan the QR code below to pay the registration fee.</p>
+            <h3>Complete Payment</h3>
+            <p><strong>Registration fee : $500</strong></p>
+            <p>Scan QR:</p>
             <div className="qr-container">
               <img src="/qr.png" alt="Payment QR Code" className="qr-code" />
             </div>
-            <div className="form-group">
-              <label htmlFor="transactionId">Transaction ID / UTR Number</label>
-              <input 
-                type="text" 
-                id="transactionId" 
-                name="transactionId" 
-                value={formData.transactionId} 
-                onChange={handleChange} 
-                placeholder="e.g. 1234567890"
-                required 
+
+            <div className="form-group upload-section">
+              <label htmlFor="screenshot">Upload Payment Screenshot</label>
+              <input
+                type="file"
+                id="screenshot"
+                name="screenshot"
+                accept="image/*"
+                onChange={handleFileChange}
+                required
+                className="file-input"
               />
+              {isScanning && <p className="scanning-text">Scanning image for Transaction ID...</p>}
+              {preview && (
+                <div className="preview-container">
+                  <img src={preview} alt="Payment Preview" className="image-preview" />
+                </div>
+              )}
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="transactionId">Registration ID:</label>
+              <input
+                type="text"
+                id="transactionId"
+                name="transactionId"
+                value={formData.transactionId}
+                onChange={handleChange}
+                placeholder="1234567890"
+                required
+              />
+              <small className="help-text">This will auto-fill from your screenshot if recognized.</small>
             </div>
           </div>
 
-          <button type="submit" disabled={loading} className="submit-btn">
-            {loading ? 'Submitting...' : 'Register Now'}
+          <button type="submit" disabled={loading || isScanning} className="submit-btn">
+            {loading ? 'Submitting...' : 'Submit & Confirm'}
           </button>
         </form>
       </div>

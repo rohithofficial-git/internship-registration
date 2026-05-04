@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: internship-backend
+    env: node
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: node server.js
+    envVars:
+      - key: PORT
+        value: 5000
+      # The following must be added manually in the Render Dashboard 
+      # since they contain sensitive secrets:
+      # - GOOGLE_SERVICE_ACCOUNT_EMAIL
+      # - GOOGLE_PRIVATE_KEY
+      # - GOOGLE_SHEET_ID
