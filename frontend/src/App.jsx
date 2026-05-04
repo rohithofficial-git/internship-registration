@@ -80,7 +80,7 @@ function App() {
       submitData.append('screenshot', screenshot);
 
       // Assuming backend runs on localhost:5000 during dev
-      const backendUrl = import.meta.env.VITE_API_URL || 'https://true-ways-smoke.loca.lt';
+      const backendUrl = "https://internship-registration.onrender.com";
       const response = await fetch(`${backendUrl}/api/register`, {
         method: 'POST',
         // Note: Do not set Content-Type header when sending FormData, fetch sets it automatically with the boundary
