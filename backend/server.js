@@ -48,11 +48,11 @@ const getServiceAccountAuth = () => {
 
 app.post('/api/register', upload.single('screenshot'), async (req, res) => {
   try {
-    const { name, email, phone, university, major, graduation, transactionId } = req.body;
+    const { name, email, phone, university, department, passedOutYear, currentlyPursuing, professionalStatus, transactionId } = req.body;
     const file = req.file;
 
     // Basic validation
-    if (!name || !email || !phone || !university || !major || !graduation || !transactionId) {
+    if (!name || !email || !phone || !university || !department || !passedOutYear || !currentlyPursuing || !professionalStatus || !transactionId) {
       return res.status(400).json({ error: 'All fields, including Transaction ID, are required.' });
     }
 
@@ -75,8 +75,10 @@ app.post('/api/register', upload.single('screenshot'), async (req, res) => {
       Email: email,
       Phone: phone,
       University: university,
-      Major: major,
-      'Expected Graduation': graduation,
+      Department: department,
+      'Passed Out Year': passedOutYear,
+      'Currently Pursuing': currentlyPursuing,
+      'Professional Status': professionalStatus,
       'Transaction ID': transactionId,
       'Screenshot Link': screenshotUrl,
       'Registration Date': new Date().toLocaleString(),
