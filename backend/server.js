@@ -39,7 +39,7 @@ const upload = multer({ storage: storage });
 const getServiceAccountAuth = () => {
   return new JWT({
     email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
-    key: process.env.GOOGLE_PRIVATE_KEY,
+    key: process.env.GOOGLE_PRIVATE_KEY ? process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, '\n') : undefined,
     scopes: [
       'https://www.googleapis.com/auth/spreadsheets',
     ],
