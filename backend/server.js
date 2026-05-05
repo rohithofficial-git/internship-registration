@@ -39,7 +39,7 @@ const upload = multer({ storage: storage });
 const getServiceAccountAuth = () => {
   return new JWT({
     email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
-    key: process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, '\n'),
+    key: process.env.GOOGLE_PRIVATE_KEY,
     scopes: [
       'https://www.googleapis.com/auth/spreadsheets',
     ],
@@ -67,7 +67,7 @@ app.post('/api/register', upload.single('screenshot'), async (req, res) => {
 
     // Append a new row to Google Sheet
     const doc = new GoogleSpreadsheet(process.env.GOOGLE_SHEET_ID, auth);
-    await doc.loadInfo(); 
+    await doc.loadInfo();
     const sheet = doc.sheetsByIndex[0];
 
     await sheet.addRow({
@@ -84,11 +84,15 @@ app.post('/api/register', upload.single('screenshot'), async (req, res) => {
 
     res.status(200).json({ message: 'Registration successful!' });
   } catch (error) {
-    console.error('Registration error:', error);
-    res.status(500).json({ error: 'Failed to process registration.', details: error.message, stack: error.stack });
+    console.error("FULL ERROR:", error);
+    res.status(500).json({
+      error: 'Failed to process registration.',
+      message: error.message
+    });
   }
 });
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
+

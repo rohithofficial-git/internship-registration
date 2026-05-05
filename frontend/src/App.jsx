@@ -8,8 +8,10 @@ function App() {
     email: '',
     phone: '',
     university: '',
-    major: '',
-    graduation: '',
+    department: '',
+    passedOutYear: '',
+    currentlyPursuing: '',
+    professionalStatus: '',
     transactionId: ''
   });
 
@@ -136,7 +138,7 @@ function App() {
 
       <div className="form-wrapper">
         <div className="header">
-          <h1>Internship Registration</h1>
+          <h1>UPGRADIAN INTERNSHIP REGISTRATION</h1>
           <p>Join our team and kickstart your career!</p>
         </div>
 
@@ -146,80 +148,139 @@ function App() {
         <form onSubmit={handleSubmit} className="registration-form">
           <div className="form-group">
             <label htmlFor="name">Full Name</label>
-            <input
-              type="text"
-              id="name"
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-              placeholder="John Doe"
-              required
-            />
+            <div className="input-wrapper">
+              <svg className="input-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+              <input
+                type="text"
+                id="name"
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                placeholder="John Doe"
+                required
+              />
+            </div>
           </div>
 
           <div className="form-group">
             <label htmlFor="email">Email Address</label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              placeholder="john@example.com"
-              required
-            />
+            <div className="input-wrapper">
+              <svg className="input-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                placeholder="john@example.com"
+                required
+              />
+            </div>
           </div>
 
           <div className="form-group">
             <label htmlFor="phone">Phone Number</label>
-            <input
-              type="tel"
-              id="phone"
-              name="phone"
-              value={formData.phone}
-              onChange={handleChange}
-              placeholder="+1 (555) 000-0000"
-              required
-            />
+            <div className="input-wrapper">
+              <svg className="input-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg>
+              <input
+                type="tel"
+                id="phone"
+                name="phone"
+                value={formData.phone}
+                onChange={handleChange}
+                placeholder="+1 (555) 000-0000"
+                required
+              />
+            </div>
           </div>
 
           <div className="form-group">
             <label htmlFor="university">University</label>
-            <input
-              type="text"
-              id="university"
-              name="university"
-              value={formData.university}
-              onChange={handleChange}
-              placeholder="State University"
-              required
-            />
+            <div className="input-wrapper">
+              <svg className="input-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 14l9-5-9-5-9 5 9 5z"></path><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"></path></svg>
+              <input
+                type="text"
+                id="university"
+                name="university"
+                value={formData.university}
+                onChange={handleChange}
+                placeholder="State University"
+                required
+              />
+            </div>
           </div>
 
           <div className="form-row">
             <div className="form-group half">
-              <label htmlFor="major">Major</label>
-              <input
-                type="text"
-                id="major"
-                name="major"
-                value={formData.major}
-                onChange={handleChange}
-                placeholder="Computer Science"
-                required
-              />
+              <label htmlFor="department">Department</label>
+              <div className="input-wrapper">
+                <svg className="input-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                <input
+                  type="text"
+                  id="department"
+                  name="department"
+                  value={formData.department}
+                  onChange={handleChange}
+                  placeholder="Computer Science"
+                  required
+                />
+              </div>
             </div>
 
             <div className="form-group half">
-              <label htmlFor="graduation">Expected Graduation</label>
-              <input
-                type="month"
-                id="graduation"
-                name="graduation"
-                value={formData.graduation}
+              <label htmlFor="passedOutYear">Passed out year</label>
+              <div className="input-wrapper">
+                <svg className="input-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                <input
+                  type="number"
+                  id="passedOutYear"
+                  name="passedOutYear"
+                  value={formData.passedOutYear}
+                  onChange={handleChange}
+                  placeholder="2024"
+                  required
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="currentlyPursuing">Pursuing</label>
+            <div className="input-wrapper">
+              <svg className="input-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 14l9-5-9-5-9 5 9 5z"></path><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"></path></svg>
+              <select
+                id="currentlyPursuing"
+                name="currentlyPursuing"
+                value={formData.currentlyPursuing}
                 onChange={handleChange}
                 required
-              />
+              >
+                <option value="">Select Option</option>
+                <option value="1st Year">1st Year</option>
+                <option value="2nd Year">2nd Year</option>
+                <option value="3rd Year">3rd Year</option>
+                <option value="4th Year">4th Year</option>
+                <option value="Graduated">Graduated</option>
+              </select>
+            </div>
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="professionalStatus">Professional Status</label>
+            <div className="input-wrapper">
+              <svg className="input-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+              <select
+                id="professionalStatus"
+                name="professionalStatus"
+                value={formData.professionalStatus}
+                onChange={handleChange}
+                required
+              >
+                <option value="">Select Status</option>
+                <option value="Unemployed">Unemployed</option>
+                <option value="Employed">Employed</option>
+                <option value="Student">Student</option>
+              </select>
             </div>
           </div>
 
@@ -252,15 +313,18 @@ function App() {
 
             <div className="form-group">
               <label htmlFor="transactionId">Registration ID:</label>
-              <input
-                type="text"
-                id="transactionId"
-                name="transactionId"
-                value={formData.transactionId}
-                onChange={handleChange}
-                placeholder="1234567890"
-                required
-              />
+              <div className="input-wrapper">
+                <svg className="input-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"></path></svg>
+                <input
+                  type="text"
+                  id="transactionId"
+                  name="transactionId"
+                  value={formData.transactionId}
+                  onChange={handleChange}
+                  placeholder="1234567890"
+                  required
+                />
+              </div>
               <small className="help-text">This will auto-fill from your screenshot if recognized.</small>
             </div>
           </div>
